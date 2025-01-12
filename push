@@ -1,0 +1,13 @@
+#!/bin/bash
+
+flags='-s'
+flags=$(printf "%s --form-string 'token=%s'" "$flags" "$PUSHOVER_APP_TOKEN")
+flags=$(printf "%s --form-string 'user=%s'" "$flags" "$PUSHOVER_USER_KEY")
+
+if [ $# -eq 0 ]; then echo "No message to push." >&2; exit 1; fi
+if [ $# -ge 1 ]; then flags=$(printf "%s --form-string 'message=%s'" "$flags" "$1"); fi
+if [ $# -ge 2 ]; then flags=$(printf "%s --form-string 'title=%s'" "$flags" "$2"); fi
+if [ $# -ge 3 ]; then flags=$(printf "%s --form-string 'url=%s'" "$flags" "$3"); fi
+if [ $# -ge 4 ]; then flags=$(printf "%s --form-string 'url_title=%s'" "$flags" "$4"); fi
+
+echo curl $(printf "%s 'https://api.pushover.net/1/messages.json'" "$flags") | bash
